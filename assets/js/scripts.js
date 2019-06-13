@@ -1,17 +1,8 @@
-let myLibrary = [
-  {
-    title: "First Book",
-    author: "First Author",
-    pages: 1000,
-    read: true
-  },  
-  {
-    title: "Second Book",
-    author: "Second Author",
-    pages: 1400,
-    read: false
-  }
-];
+let myLibrary = [];
+const book1 = new Book("First Book", "First Author", 1000, true); 
+const book2 = new Book("Second Book", "Second Author", 344, false); 
+myLibrary.push(book1);
+myLibrary.push(book2);
 
 function Book(title, author, pages, read) {
   this.title = title;
@@ -20,13 +11,43 @@ function Book(title, author, pages, read) {
   this.read = read;
 }
 
-function addBookToLibrary() {
+const modal = document.getElementById("myModal");
+const btn = document.getElementById("modalBtn");
+const span = document.getElementsByClassName("close")[0];
+
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+function addBookToLibrary(event) {
+  event.preventDefault();
   const form = document.querySelector("form"); 
   const book = new Book(form.title.value, form.author.value, form.pages.value, form.read.value);
   myLibrary.push(book);
+  console.log(book);
+  console.log(myLibrary);
+  modal.style.display = "none"; 
+  render();
 }
 
+const addBook = document.getElementById("addBook");
+//addBook.onclick = addBookToLibrary();
+
+addBook.addEventListener("click", addBookToLibrary, false); 
+
 function render() {
+  const container = document.getElementsByClassName("container")[0];
+  while (container.hasChildNodes()) { container.removeChild(container.firstChild); } 
   myLibrary.forEach((book) => {
     const card = document.createElement("div"), 
     header = document.createElement("header"), 
@@ -34,8 +55,7 @@ function render() {
     author = document.createElement("p"), 
     pages = document.createElement("p"), 
     read = document.createElement("button"), 
-    remove = document.createElement("div"),
-    body = document.getElementsByTagName("body")[0]; 
+    remove = document.createElement("div");
 
     card.setAttribute("class", "card");
     header.setAttribute("class", "header");
@@ -56,26 +76,8 @@ function render() {
     card.appendChild(read);
     card.appendChild(remove);
     
-    body.appendChild(card);
+    container.appendChild(card);
   });
 }
 
 render();
-
-var modal = document.getElementById("myModal");
-var btn = document.getElementById("modalBtn");
-var span = document.getElementsByClassName("close")[0];
-
-btn.onclick = function() {
-  modal.style.display = "block";
-}
-
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
