@@ -1,11 +1,5 @@
 let myLibrary = [];
 
-const book1 = new Book("First Book", "First Author", 1000, true);
-const book2 = new Book("Second Book", "Second Author", 344, false);
-
-myLibrary.push(book1);
-myLibrary.push(book2);
-
 function Book(title, author, pages, read) {
   this.title = title;
   this.author = author;
@@ -16,6 +10,17 @@ function Book(title, author, pages, read) {
 Book.prototype.toggle = function() {
   this.read ? (this.read = false) : (this.read = true);
 };
+
+if (localStorage.getItem("book-collection") === null) {
+  const book1 = new Book("First Book", "First Author", 1000, true);
+  const book2 = new Book("Second Book", "Second Author", 344, false);
+  myLibrary.push(book1);
+  myLibrary.push(book2);
+
+  localStorage.setItem("book-collection", JSON.stringify(myLibrary));
+} else {
+  myLibrary = JSON.parse(localStorage.getItem("book-collection"));
+}
 
 const modal = document.getElementById("myModal");
 const btn = document.getElementById("modalBtn");
@@ -44,7 +49,9 @@ function addBookToLibrary(event) {
     form.pages.value,
     form.read.value
   );
+
   myLibrary.push(book);
+  localStorage.setItem("book-collection", JSON.stringify(myLibrary));
 
   modal.style.display = "none";
 
@@ -63,6 +70,7 @@ addBook.addEventListener("click", addBookToLibrary, false);
 function removeBookFromLibrary(event) {
   const cardIndex = event.target.parentNode.getAttribute("data-index");
   myLibrary = myLibrary.filter((el, i) => i !== +cardIndex);
+  localStorage.setItem("book-collection", JSON.stringify(myLibrary));
   render();
 }
 
@@ -72,6 +80,7 @@ function render() {
     container.removeChild(container.firstChild);
   }
   myLibrary.forEach((book, index) => {
+    book.__proto__ = Object.create(new Book);
     const card = document.createElement("div"),
       header = document.createElement("header"),
       title = document.createElement("p"),
@@ -92,6 +101,7 @@ function render() {
     read.textContent = book.read ? "Read" : "Not read yet";
     read.onclick = () => {
       book.toggle();
+      localStorage.setItem("book-collection", JSON.stringify(myLibrary));
       render();
     };
     remove.innerHTML = "×";
