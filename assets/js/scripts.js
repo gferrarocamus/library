@@ -1,6 +1,8 @@
 let myLibrary = [];
+
 const book1 = new Book("First Book", "First Author", 1000, true);
 const book2 = new Book("Second Book", "Second Author", 344, false);
+
 myLibrary.push(book1);
 myLibrary.push(book2);
 
@@ -11,9 +13,9 @@ function Book(title, author, pages, read) {
   this.read = read;
 }
 
-Book.prototype.toggle =  function() {
-  this.read ? this.read = false : this.read = true;
-}
+Book.prototype.toggle = function() {
+  this.read ? (this.read = false) : (this.read = true);
+};
 
 const modal = document.getElementById("myModal");
 const btn = document.getElementById("modalBtn");
@@ -91,7 +93,7 @@ function render() {
     read.onclick = () => {
       book.toggle();
       render();
-    }
+    };
     remove.innerHTML = "×";
     remove.addEventListener("click", removeBookFromLibrary, false);
 
