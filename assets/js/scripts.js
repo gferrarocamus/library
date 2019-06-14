@@ -8,7 +8,7 @@ function Book(title, author, pages, read) {
 }
 
 Book.prototype.toggle = function() {
-  this.read ? (this.read = false) : (this.read = true);
+  this.read = !this.read;
 };
 
 if (localStorage.getItem("book-collection") === null) {
@@ -43,12 +43,7 @@ window.onclick = function(event) {
 function addBookToLibrary(event) {
   event.preventDefault();
   const form = document.querySelector("form");
-  const book = new Book(
-    form.title.value,
-    form.author.value,
-    form.pages.value,
-    form.read.value
-  );
+  const book = new Book(form.title.value, form.author.value, form.pages.value, form.read.value);
 
   myLibrary.push(book);
   localStorage.setItem("book-collection", JSON.stringify(myLibrary));
@@ -74,25 +69,27 @@ function removeBookFromLibrary(event) {
   render();
 }
 
+const appendToParent = (parent, child) => parent.appendChild(child);
+const setClassToElement = (elem, value) => elem.setAttribute("class", value);
+
 function render() {
   const container = document.getElementsByClassName("container")[0];
   while (container.hasChildNodes()) {
     container.removeChild(container.firstChild);
   }
   myLibrary.forEach((book, index) => {
-    book.__proto__ = Object.create(new Book);
-    const card = document.createElement("div"),
-      header = document.createElement("header"),
-      title = document.createElement("p"),
-      author = document.createElement("p"),
-      pages = document.createElement("p"),
-      read = document.createElement("button"),
-      remove = document.createElement("div");
+    book.__proto__ = Object.create(new Book());
+    const card = document.createElement("div");
+    const header = document.createElement("header");
+    const title = document.createElement("p");
+    const author = document.createElement("p");
+    const pages = document.createElement("p");
+    const read = document.createElement("button");
+    const remove = document.createElement("div");
 
-    card.setAttribute("class", "card");
-    header.setAttribute("class", "header");
-    read.setAttribute("class", "read");
-    remove.setAttribute("class", "remove");
+    [[card, "card"], [header, "header"], [read, "read"], [remove, "remove"]].forEach(arr =>
+      setClassToElement(arr[0], arr[1])
+    );
 
     header.textContent = book.title;
     title.textContent = 'Title: "' + book.title + '"';
@@ -107,14 +104,9 @@ function render() {
     remove.innerHTML = "×";
     remove.addEventListener("click", removeBookFromLibrary, false);
 
-    card.appendChild(header);
-    card.appendChild(title);
-    card.appendChild(author);
-    card.appendChild(pages);
-    card.appendChild(read);
-    card.appendChild(remove);
+    [header, title, author, pages, read, remove].forEach(child => appendToParent(card, child));
     card.setAttribute("data-index", index);
-    container.appendChild(card);
+    appendToParent(container, card);
   });
 }
 
