@@ -83,7 +83,7 @@ function render() {
     container.removeChild(container.firstChild);
   }
   myLibrary.forEach((book, index) => {
-    book.__proto__ = Object.create(new Book());
+    book.__proto__ = Book.prototype;
     const card = document.createElement("div");
     const header = document.createElement("header");
     const title = document.createElement("p");
@@ -112,9 +112,7 @@ function render() {
     remove.innerHTML = "×";
     remove.addEventListener("click", removeBookFromLibrary, false);
 
-    [header, title, author, pages, read, remove].forEach(child =>
-      appendToParent(card, child)
-    );
+    [header, title, author, pages, read, remove].forEach(child => appendToParent(card, child));
     card.setAttribute("data-index", index);
     appendToParent(container, card);
   });
