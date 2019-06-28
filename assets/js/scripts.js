@@ -49,7 +49,7 @@ function addBookToLibrary(event) {
     form.pages.value,
     form.read.value === "1" ? true : false
   );
-
+  
   myLibrary.push(book);
   localStorage.setItem("book-collection", JSON.stringify(myLibrary));
 
@@ -64,8 +64,8 @@ function addBookToLibrary(event) {
   render();
 }
 
-const addBook = document.getElementById("addBook");
-addBook.addEventListener("click", addBookToLibrary, false);
+const form = document.getElementById("form");
+form.addEventListener("submit", addBookToLibrary, false);
 
 function removeBookFromLibrary(event) {
   const cardIndex = event.target.parentNode.getAttribute("data-index");
@@ -112,7 +112,9 @@ function render() {
     remove.innerHTML = "×";
     remove.addEventListener("click", removeBookFromLibrary, false);
 
-    [header, title, author, pages, read, remove].forEach(child => appendToParent(card, child));
+    [header, title, author, pages, read, remove].forEach(child =>
+      appendToParent(card, child)
+    );
     card.setAttribute("data-index", index);
     appendToParent(container, card);
   });
